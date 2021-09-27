@@ -94,7 +94,7 @@ query DashboardQuery(
       totalCount
     }
   }
-  todos(options: $options) {
+  todos(options: {operators: {kind: LIKE, field: "completed", value: "true"}}) {
     data {
       id
       title
@@ -199,7 +199,19 @@ v5 = [
   },
   {
     "alias": null,
-    "args": (v1/*: any*/),
+    "args": [
+      {
+        "kind": "Literal",
+        "name": "options",
+        "value": {
+          "operators": {
+            "field": "completed",
+            "kind": "LIKE",
+            "value": "true"
+          }
+        }
+      }
+    ],
     "concreteType": "TodosPage",
     "kind": "LinkedField",
     "name": "todos",
@@ -227,7 +239,7 @@ v5 = [
       },
       (v4/*: any*/)
     ],
-    "storageKey": null
+    "storageKey": "todos(options:{\"operators\":{\"field\":\"completed\",\"kind\":\"LIKE\",\"value\":\"true\"}})"
   },
   {
     "alias": null,
@@ -280,16 +292,16 @@ return {
     "selections": (v5/*: any*/)
   },
   "params": {
-    "cacheID": "7197fbfb50e82ba1ca87dc2ce0ad663a",
+    "cacheID": "e0fdac79bea56cb143a6413e2788da01",
     "id": null,
     "metadata": {},
     "name": "DashboardQuery",
     "operationKind": "query",
-    "text": "query DashboardQuery(\n  $options: PageQueryOptions\n) {\n  posts(options: $options) {\n    data {\n      id\n      title\n      body\n    }\n    meta {\n      totalCount\n    }\n  }\n  todos(options: $options) {\n    data {\n      id\n      title\n      completed\n    }\n    meta {\n      totalCount\n    }\n  }\n  photos(options: $options) {\n    data {\n      id\n      title\n      url\n    }\n    meta {\n      totalCount\n    }\n  }\n}\n"
+    "text": "query DashboardQuery(\n  $options: PageQueryOptions\n) {\n  posts(options: $options) {\n    data {\n      id\n      title\n      body\n    }\n    meta {\n      totalCount\n    }\n  }\n  todos(options: {operators: {kind: LIKE, field: \"completed\", value: \"true\"}}) {\n    data {\n      id\n      title\n      completed\n    }\n    meta {\n      totalCount\n    }\n  }\n  photos(options: $options) {\n    data {\n      id\n      title\n      url\n    }\n    meta {\n      totalCount\n    }\n  }\n}\n"
   }
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = 'f422e546f1459016161436f9d71b0368';
+(node/*: any*/).hash = 'e1f5d60cce63f25e401086c4c2602c42';
 
 module.exports = node;

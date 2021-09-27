@@ -27,7 +27,7 @@ import graphql from "babel-plugin-relay/macro";
 function Dashboard({ queryRef }) {
   const data = usePreloadedQuery(
     graphql`
-      query DashboardQuery($options: PageQueryOptions) {
+      query DashboardQuery ($options: PageQueryOptions){
         posts(options: $options) {
           data {
             id
@@ -38,7 +38,7 @@ function Dashboard({ queryRef }) {
             totalCount
           }
         }
-        todos(options: $options) {
+        todos(options : {operators: {kind: LIKE,  field: "completed", value: "true"}}) {
           data {
             id
             title
@@ -63,8 +63,7 @@ function Dashboard({ queryRef }) {
     queryRef
   );
 
-  const latestTodosCompleted = data.todos.data.filter((todo) => todo.completed);
-
+  console.log(data.todos)
   useEffect(() => {
     return () => {
       queryRef.dispose();
@@ -182,7 +181,7 @@ function Dashboard({ queryRef }) {
         <Card sx={{ boxShadow: 3 }}>
           <CardContent> 
             <List component="nav">
-              {latestTodosCompleted.map((todo) => (
+              {data.todos.data.map((todo) => (
                 <ListItem key={todo.id} button>
                   <ListItemText primary={todo.title} />
                 </ListItem>
