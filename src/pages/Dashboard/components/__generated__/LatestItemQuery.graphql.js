@@ -38,50 +38,41 @@ export type OperatorOptions = {|
 export type SearchOptions = {|
   q?: ?string
 |};
-export type DashboardQueryVariables = {|
+export type LatestItemQueryVariables = {|
   options?: ?PageQueryOptions
 |};
-export type DashboardQueryResponse = {|
+export type LatestItemQueryResponse = {|
   +posts: ?{|
     +data: ?$ReadOnlyArray<?{|
       +id: ?string,
       +title: ?string,
       +body: ?string,
-    |}>,
-    +meta: ?{|
-      +totalCount: ?number
-    |},
-  |},
-  +todos: ?{|
-    +data: ?$ReadOnlyArray<?{|
-      +id: ?string,
-      +title: ?string,
-      +completed: ?boolean,
-    |}>,
-    +meta: ?{|
-      +totalCount: ?number
-    |},
+    |}>
   |},
   +photos: ?{|
     +data: ?$ReadOnlyArray<?{|
       +id: ?string,
       +title: ?string,
       +url: ?string,
-    |}>,
-    +meta: ?{|
-      +totalCount: ?number
-    |},
+    |}>
+  |},
+  +todos: ?{|
+    +data: ?$ReadOnlyArray<?{|
+      +id: ?string,
+      +title: ?string,
+      +completed: ?boolean,
+    |}>
   |},
 |};
-export type DashboardQuery = {|
-  variables: DashboardQueryVariables,
-  response: DashboardQueryResponse,
+export type LatestItemQuery = {|
+  variables: LatestItemQueryVariables,
+  response: LatestItemQueryResponse,
 |};
 */
 
 
 /*
-query DashboardQuery(
+query LatestItemQuery(
   $options: PageQueryOptions
 ) {
   posts(options: $options) {
@@ -90,19 +81,6 @@ query DashboardQuery(
       title
       body
     }
-    meta {
-      totalCount
-    }
-  }
-  todos(options: {operators: {kind: LIKE, field: "completed", value: "true"}}) {
-    data {
-      id
-      title
-      completed
-    }
-    meta {
-      totalCount
-    }
   }
   photos(options: $options) {
     data {
@@ -110,8 +88,12 @@ query DashboardQuery(
       title
       url
     }
-    meta {
-      totalCount
+  }
+  todos(options: {sort: {field: "id", order: DESC}, operators: {kind: LIKE, field: "completed", value: "true"}, paginate: {page: 1, limit: 5}}) {
+    data {
+      id
+      title
+      completed
     }
   }
 }
@@ -146,25 +128,7 @@ v3 = {
   "name": "title",
   "storageKey": null
 },
-v4 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "PageMetadata",
-  "kind": "LinkedField",
-  "name": "meta",
-  "plural": false,
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "totalCount",
-      "storageKey": null
-    }
-  ],
-  "storageKey": null
-},
-v5 = [
+v4 = [
   {
     "alias": null,
     "args": (v1/*: any*/),
@@ -192,54 +156,9 @@ v5 = [
           }
         ],
         "storageKey": null
-      },
-      (v4/*: any*/)
-    ],
-    "storageKey": null
-  },
-  {
-    "alias": null,
-    "args": [
-      {
-        "kind": "Literal",
-        "name": "options",
-        "value": {
-          "operators": {
-            "field": "completed",
-            "kind": "LIKE",
-            "value": "true"
-          }
-        }
       }
     ],
-    "concreteType": "TodosPage",
-    "kind": "LinkedField",
-    "name": "todos",
-    "plural": false,
-    "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "Todo",
-        "kind": "LinkedField",
-        "name": "data",
-        "plural": true,
-        "selections": [
-          (v2/*: any*/),
-          (v3/*: any*/),
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "completed",
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
-      },
-      (v4/*: any*/)
-    ],
-    "storageKey": "todos(options:{\"operators\":{\"field\":\"completed\",\"kind\":\"LIKE\",\"value\":\"true\"}})"
+    "storageKey": null
   },
   {
     "alias": null,
@@ -268,10 +187,60 @@ v5 = [
           }
         ],
         "storageKey": null
-      },
-      (v4/*: any*/)
+      }
     ],
     "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": [
+      {
+        "kind": "Literal",
+        "name": "options",
+        "value": {
+          "operators": {
+            "field": "completed",
+            "kind": "LIKE",
+            "value": "true"
+          },
+          "paginate": {
+            "limit": 5,
+            "page": 1
+          },
+          "sort": {
+            "field": "id",
+            "order": "DESC"
+          }
+        }
+      }
+    ],
+    "concreteType": "TodosPage",
+    "kind": "LinkedField",
+    "name": "todos",
+    "plural": false,
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "Todo",
+        "kind": "LinkedField",
+        "name": "data",
+        "plural": true,
+        "selections": [
+          (v2/*: any*/),
+          (v3/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "completed",
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      }
+    ],
+    "storageKey": "todos(options:{\"operators\":{\"field\":\"completed\",\"kind\":\"LIKE\",\"value\":\"true\"},\"paginate\":{\"limit\":5,\"page\":1},\"sort\":{\"field\":\"id\",\"order\":\"DESC\"}})"
   }
 ];
 return {
@@ -279,8 +248,8 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "DashboardQuery",
-    "selections": (v5/*: any*/),
+    "name": "LatestItemQuery",
+    "selections": (v4/*: any*/),
     "type": "Query",
     "abstractKey": null
   },
@@ -288,20 +257,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "DashboardQuery",
-    "selections": (v5/*: any*/)
+    "name": "LatestItemQuery",
+    "selections": (v4/*: any*/)
   },
   "params": {
-    "cacheID": "e0fdac79bea56cb143a6413e2788da01",
+    "cacheID": "f11caea6c16190fd37026e9f70506548",
     "id": null,
     "metadata": {},
-    "name": "DashboardQuery",
+    "name": "LatestItemQuery",
     "operationKind": "query",
-    "text": "query DashboardQuery(\n  $options: PageQueryOptions\n) {\n  posts(options: $options) {\n    data {\n      id\n      title\n      body\n    }\n    meta {\n      totalCount\n    }\n  }\n  todos(options: {operators: {kind: LIKE, field: \"completed\", value: \"true\"}}) {\n    data {\n      id\n      title\n      completed\n    }\n    meta {\n      totalCount\n    }\n  }\n  photos(options: $options) {\n    data {\n      id\n      title\n      url\n    }\n    meta {\n      totalCount\n    }\n  }\n}\n"
+    "text": "query LatestItemQuery(\n  $options: PageQueryOptions\n) {\n  posts(options: $options) {\n    data {\n      id\n      title\n      body\n    }\n  }\n  photos(options: $options) {\n    data {\n      id\n      title\n      url\n    }\n  }\n  todos(options: {sort: {field: \"id\", order: DESC}, operators: {kind: LIKE, field: \"completed\", value: \"true\"}, paginate: {page: 1, limit: 5}}) {\n    data {\n      id\n      title\n      completed\n    }\n  }\n}\n"
   }
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = 'e1f5d60cce63f25e401086c4c2602c42';
+(node/*: any*/).hash = 'c8fb9fc00c30a2387371522a82dd04b9';
 
 module.exports = node;

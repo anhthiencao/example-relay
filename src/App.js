@@ -20,32 +20,32 @@ import { usePreloadedQuery } from "react-relay";
 import graphql from "babel-plugin-relay/macro";
 import { loadQuery } from "react-relay";
 import { getTitle } from "./common/helper";
-const DashboardQuery = require("./pages/__generated__/DashboardQuery.graphql");
+// const DashboardQuery = require("./pages/__generated__/DashboardQuery.graphql");
 
 const { Suspense } = React;
 
-const initDashboardQueryRef = loadQuery(RelayEnvironment, DashboardQuery, {
-  options: {
-    sort: {
-      field: "id",
-      order: "DESC",
-    },
-  },
-});
+// const initDashboardQueryRef = loadQuery(RelayEnvironment, DashboardQuery, {
+//   options: {
+//     sort: {
+//       field: "id",
+//       order: "DESC",
+//     },
+//   },
+// });
 
-const appQuery = graphql`
-  query AppQuery($options: PageQueryOptions) {
-    posts(options: $options) {
-      ...ListPostSection_post
-    }
-    todos(options: $options) {
-      ...ListTodoSection_todo
-    }
-    photos(options: $options) {
-      ...ListPhotoSection_photo
-    }
-  }
-`;
+// const appQuery = graphql`
+//   query AppQuery($options: PageQueryOptions) {
+//     posts(options: $options) {
+//       ...ListPostSection_post
+//     }
+//     todos(options: $options) {
+//       ...ListTodoSection_todo
+//     }
+//     photos(options: $options) {
+//       ...ListPhotoSection_photo
+//     }
+//   }
+// `;
 
 const HeaderContent = () => {
   const location = useLocation();
@@ -59,17 +59,17 @@ const HeaderContent = () => {
 };
 
 const App = () => {
-  const [appQueryRef, loadAppQuery] = useQueryLoader(
-    appQuery,
-    initDashboardQueryRef
-  );
-  const data = usePreloadedQuery(appQuery, appQueryRef);
+  // const [appQueryRef, loadAppQuery] = useQueryLoader(
+  //   appQuery,
+  //   initDashboardQueryRef
+  // );
+  // const data = usePreloadedQuery(appQuery, appQueryRef);
 
-  useEffect(() => {
-    loadAppQuery({});
+  // useEffect(() => {
+  //   loadAppQuery({});
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   return (
     <Router>
@@ -80,22 +80,17 @@ const App = () => {
           <HeaderContent />
           <Switch>
             <Route exact path="/">
-              <Dashboard queryRef={initDashboardQueryRef} />
+              <Dashboard />
             </Route>
             <Route path="/todo">
-              {appQueryRef !== null && data?.todos && (
-                <ListTodo todos={data?.todos} />
-              )}
+              <ListTodo />
             </Route>
             <Route path="/post">
-              {appQueryRef !== null && data?.posts && (
-                <ListPost posts={data?.posts} />
-              )}
+              <ListPost />
             </Route>
-            {appQueryRef !== null && data?.photos && (
-              <ListPhoto photos={data?.photos} />
-            )}
-            <Route path="/photo"></Route>
+            <Route path="/photo">
+              <ListPhoto />
+            </Route>
           </Switch>
         </Box>
       </Box>
